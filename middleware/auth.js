@@ -19,6 +19,8 @@ function auth(req, res, next) {
         return res
           .status(401)
           .json({ msg: "Tried to reach another user's data, access denied." });
+      } else {
+        next();
       }
     })
     .catch((e) => {
