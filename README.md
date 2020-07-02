@@ -16,3 +16,38 @@ In order to run this application you must have a Firebase project set up. If you
 
 - [Node.js](https://nodejs.org/en/docs/)
 - [Firebase](https://firebase.google.com/docs)
+
+## API routes
+
+You have to be **logged in** to your account, in order to successfully send a request to any of the following routes:
+
+### Subjects
+
+To retrieve
+
+- All subjects: Make a **GET** request to `/subjects/:userId`
+- A specific subject: Make a **GET** request to `/subjects/:userId/:subjectId`
+
+### Lessons
+
+To retrieve
+
+- All lessons: Make a **GET** request to `/lessons/:userId`
+- A specific subject's lessons: Make a **GET** request to `/lessons/:userId/:subjectId`
+- A specific lesson: Make a **GET** request to `/lessons/:userId/:subjectId/:lessonId`
+
+### Tasks
+
+To retrieve
+
+- All tasks: Make a **GET** request to `/tasks/:userId`
+- A specific subject's tasks: Make a **GET** request to `/tasks/:userId/:subjectId`
+- A specific task: Make a **GET** request to `/tasks/:userId/:subjectId/:taskId`
+
+### Exams
+
+To retrieve
+
+- All exams: Make a **GET** request to `/exams/:userId`
+- A specific subject's exams: Make a **GET** request to `/exams/:userId/:subjectId`
+- A specific exam: Make a **GET** request to `/exams/:userId/:subjectId/:examId`
