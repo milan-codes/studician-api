@@ -59,7 +59,7 @@ router.get("/:userId/:subjectId", auth, (req, res) => {
 router.get("/:userId/:subjectId/:lessonId", auth, (req, res) => {
   const db = admin.database();
   const { userId, subjectId, lessonId } = req.params;
-  const ref = db.ref(`lessons/${userId}/${subjectId}/${lessonId}`);
+  const ref = db.ref(`/lessons/${userId}/${subjectId}/${lessonId}`);
 
   ref.once(
     "value",
