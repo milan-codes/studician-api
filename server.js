@@ -17,6 +17,7 @@ admin.initializeApp({
 app.use("/subjects", require("./routes/subjects"));
 app.use("/lessons", require("./routes/lessons"));
 app.use("/tasks", require("./routes/tasks"));
+app.use("/exams", require("./routes/exams"));
 
 const port = process.env.PORT || 5000;
 
