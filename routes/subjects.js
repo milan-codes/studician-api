@@ -35,6 +35,7 @@ router.get("/:userId/:subjectId", auth, (req, res) => {
   const db = admin.database();
   const { userId, subjectId } = req.params;
   const ref = db.ref(`/subjects/${userId}/${subjectId}`);
+
   ref.once(
     "value",
     (subject) => {
@@ -46,7 +47,7 @@ router.get("/:userId/:subjectId", auth, (req, res) => {
     (e) => {
       return res.json({
         msg: "Error while trying to fetch requested subject.",
-        error: e,
+        errorMsg: e,
       });
     }
   );

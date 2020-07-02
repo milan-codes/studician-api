@@ -14,7 +14,8 @@ admin.initializeApp({
   databaseURL: process.env.DATABASE_URL,
 });
 
-app.use("/subjects", require("./routes/subject"));
+app.use("/subjects", require("./routes/subjects"));
+app.use("/lessons", require("./routes/lessons"));
 
 const port = process.env.PORT || 5000;
 
