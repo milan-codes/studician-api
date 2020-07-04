@@ -1,9 +1,11 @@
 const admin = require("firebase-admin");
 const auth = require("../middleware/auth");
 const express = require("express");
+const Subject = require("../models/Subject");
+const { registerVersion } = require("firebase");
 const router = express.Router();
 
-// @route   GET subjects/:id
+// @route   GET subjects/:userId
 // @desc    Gets all subjects of a user
 // @access  Private
 router.get("/:userId", auth, (req, res) => {
@@ -28,7 +30,7 @@ router.get("/:userId", auth, (req, res) => {
   );
 });
 
-// @route   GET subjects/:id/subjectId
+// @route   GET subjects/:userId/subjectId
 // @desc    Gets a specific subject of a user
 // @access  Private
 router.get("/:userId/:subjectId", auth, (req, res) => {
@@ -51,6 +53,31 @@ router.get("/:userId/:subjectId", auth, (req, res) => {
       });
     }
   );
+});
+
+// @route   POST subjects/:userId
+// @desc    Adds a subject to the database
+// @access  Private
+router.post("/:userId", auth, (req, res) => {
+  const db = admin.database();
+  const { userId } = req.params;
+
+  if (!req.body.name || !req.body.teacher || !req.body.colorCode) {
+    return res.status(400).json({ msg: "Missing parameters." });
+  }
+
+  const subject = new Subject(req.body.name, req.body.teacher, req.body.colorCode);
+  const key = db.ref(`subjects/${userId}`).push().key;
+  subject.id = key;
+
+  const ref = db.ref(`subjects/${userId}/${key}`);
+
+  try {
+    ref.set(subject);
+    res.json({ success: true });
+  } catch (e) {
+    res.json({ success: false, errorMsg: e });
+  }
 });
 
 module.exports = router;

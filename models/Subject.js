@@ -33,3 +33,5 @@ class Subject {
     this.id = id;
   }
 }
+
+module.exports = Subject;
