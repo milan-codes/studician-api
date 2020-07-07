@@ -2,7 +2,6 @@ const admin = require("firebase-admin");
 const auth = require("../middleware/auth");
 const express = require("express");
 const Subject = require("../models/Subject");
-const { registerVersion } = require("firebase");
 const router = express.Router();
 
 // @route   GET subjects/:userId
@@ -61,12 +60,13 @@ router.get("/:userId/:subjectId", auth, (req, res) => {
 router.post("/:userId", auth, (req, res) => {
   const db = admin.database();
   const { userId } = req.params;
+  const { name, teacher, colorCode } = req.body;
 
-  if (!req.body.name || !req.body.teacher || !req.body.colorCode) {
+  if (!name || !teacher || !colorCode) {
     return res.status(400).json({ msg: "Missing parameters." });
   }
 
-  const subject = new Subject(req.body.name, req.body.teacher, req.body.colorCode);
+  const subject = new Subject(name, teacher, colorCode);
   const key = db.ref(`subjects/${userId}`).push().key;
   subject.id = key;
 

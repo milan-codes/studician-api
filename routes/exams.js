@@ -3,7 +3,6 @@ const auth = require("../middleware/auth");
 const express = require("express");
 const validateSID = require("../middleware/validateSID");
 const Exam = require("../models/Exam");
-const Task = require("../models/Task");
 const router = express.Router();
 
 // @route   GET exams/:userId
@@ -87,7 +86,7 @@ router.get("/:userId/:subjectId/:examId", auth, (req, res) => {
 router.post("/:userId", auth, validateSID, (req, res) => {
   const db = admin.database();
   const { userId } = req.params;
-  const { name, description, subjectId, dueDate, reminder, id } = req.body;
+  const { name, description, subjectId, dueDate, reminder } = req.body;
 
   if (!name || !subjectId || !dueDate) {
     return res.status(400).json({ msg: "Missing parameters." });

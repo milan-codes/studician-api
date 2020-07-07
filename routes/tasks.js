@@ -86,7 +86,7 @@ router.get("/:userId/:subjectId/:taskId", auth, (req, res) => {
 router.post("/:userId", auth, validateSID, (req, res) => {
   const db = admin.database();
   const { userId } = req.params;
-  const { name, description, type, subjectId, dueDate, reminder, id } = req.body;
+  const { name, description, type, subjectId, dueDate, reminder } = req.body;
 
   if (!name || !type || !subjectId || !dueDate) {
     return res.status(400).json({ msg: "Missing parameters." });

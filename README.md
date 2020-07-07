@@ -8,7 +8,7 @@ Our backend uses Node.js and Firebase to serve our frontend on all of our platfo
 
 ### Installation
 
-After you forked and cloned the repository, run `npm i` and create a `secrets` folder and a `.env` file. You can found out how you need to set up your own .env file in **`example.env`**.
+After you forked and cloned the repository, run `npm i` and create a `secrets` folder and a `.env` file. You can find out how you need to set up your own .env file in **`example.env`**.
 
 In order to run this application you must have a Firebase project set up. If you are logged in to your Google account, you can easily add a new project in [Firebase Console](https://console.firebase.google.com). Once you've done that, you need to **generate a private key file** from Firebase Console. (In Firebase Console: Project Settings -> Service accounts -> Generate new private key) and put it under api\secrects\, the folder you previously created, so the path to the file would look like this: `api\secrets\service-account-file.json`. After that, you're ready to develop!
 
@@ -89,5 +89,5 @@ The request's body should include:
 - `name`: Name of the exam
 - `description`: A short description, notes (optional)
 - `subjectId`: ID of the exam's subject
-- `dueDate`: The date of the exam
+- `dueDate`: The date of the exam (Use the format emitted by `Date`'s `toJSON` method: eg.: 2020-01-01T00:00:43.511Z, optional)
 - `reminder`: Date of reminder (Use the format emitted by `Date`'s `toJSON` method: eg.: 2020-01-01T00:00:43.511Z, optional)
