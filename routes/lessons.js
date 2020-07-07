@@ -100,9 +100,9 @@ router.post("/:userId", auth, validateSID, (req, res) => {
 
   try {
     ref.set(lesson);
-    res.json({ success: true });
+    res.status(201).json({ success: true });
   } catch (e) {
-    res.json({ success: false, errorMsg: e });
+    res.status(500).json({ success: false, errorMsg: e });
   }
 });
 

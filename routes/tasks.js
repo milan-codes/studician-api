@@ -92,7 +92,7 @@ router.post("/:userId", auth, validateSID, (req, res) => {
     return res.status(400).json({ msg: "Missing parameters." });
   }
 
-  const task = new Task(name, "", type, subjectId, dueDate, "");
+  const task = new Task(name, null, type, subjectId, dueDate, null);
   const key = db.ref(`tasks/${userId}/${subjectId}`).push().key;
   task.id = key;
 
@@ -103,9 +103,9 @@ router.post("/:userId", auth, validateSID, (req, res) => {
 
   try {
     ref.set(task);
-    res.json({ success: true });
+    res.status(201).json({ success: true });
   } catch (e) {
-    res.json({ success: false, errorMsg: e });
+    res.status(500).json({ success: false, errorMsg: e });
   }
 });
 
