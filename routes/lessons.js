@@ -1,6 +1,8 @@
 const admin = require("firebase-admin");
 const auth = require("../middleware/auth");
+const validateSID = require("../middleware/validateSID");
 const express = require("express");
+const Lesson = require("../models/Lesson");
 const router = express.Router();
 
 // @route   GET lessons/:userId
@@ -76,6 +78,32 @@ router.get("/:userId/:subjectId/:lessonId", auth, (req, res) => {
       });
     }
   );
+});
+
+// @route   POST lessons/:userId
+// @desc    Adds a lesson to the database
+// @access  Private
+router.post("/:userId", auth, validateSID, (req, res) => {
+  const db = admin.database();
+  const { userId } = req.params;
+  const { subjectId, week, day, starts, ends, location } = req.body;
+
+  if (!subjectId || !week || !day || !starts || !ends || !location) {
+    return res.status(400).json({ msg: "Missing parameters." });
+  }
+
+  const lesson = new Lesson(subjectId, week, day, starts, ends, location);
+  const key = db.ref(`lessons/${userId}/${subjectId}`).push().key;
+  lesson.id = key;
+
+  const ref = db.ref(`lessons/${userId}/${subjectId}/${key}`);
+
+  try {
+    ref.set(lesson);
+    res.status(201).json({ success: true });
+  } catch (e) {
+    res.status(500).json({ success: false, errorMsg: e });
+  }
 });
 
 module.exports = router;

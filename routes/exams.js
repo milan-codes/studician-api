@@ -1,6 +1,8 @@
 const admin = require("firebase-admin");
 const auth = require("../middleware/auth");
 const express = require("express");
+const validateSID = require("../middleware/validateSID");
+const Exam = require("../models/Exam");
 const router = express.Router();
 
 // @route   GET exams/:userId
@@ -76,6 +78,35 @@ router.get("/:userId/:subjectId/:examId", auth, (req, res) => {
       });
     }
   );
+});
+
+// @route   POST exams/:userId
+// @desc    Adds an exam to the database
+// @access  Private
+router.post("/:userId", auth, validateSID, (req, res) => {
+  const db = admin.database();
+  const { userId } = req.params;
+  const { name, description, subjectId, dueDate, reminder } = req.body;
+
+  if (!name || !subjectId || !dueDate) {
+    return res.status(400).json({ msg: "Missing parameters." });
+  }
+
+  const exam = new Exam(name, null, subjectId, dueDate, null);
+  const key = db.ref(`exams/${userId}/${subjectId}`).push().key;
+  exam.id = key;
+
+  if (description) exam.description = description;
+  if (reminder) exam.reminder = reminder;
+
+  const ref = db.ref(`exams/${userId}/${subjectId}/${key}`);
+
+  try {
+    ref.set(exam);
+    res.status(201).json({ success: true });
+  } catch (e) {
+    res.status(500).json({ success: false, errorMsg: e });
+  }
 });
 
 module.exports = router;
