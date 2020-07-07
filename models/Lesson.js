@@ -51,3 +51,5 @@ class Lesson {
     this.id = id;
   }
 }
+
+module.exports = Lesson;
