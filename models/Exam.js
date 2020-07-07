@@ -46,3 +46,5 @@ class Exam {
     this.id = id;
   }
 }
+
+module.exports = Exam;
