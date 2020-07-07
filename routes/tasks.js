@@ -1,6 +1,8 @@
 const admin = require("firebase-admin");
 const auth = require("../middleware/auth");
 const express = require("express");
+const Task = require("../models/Task");
+const validateSID = require("../middleware/validateSID");
 const router = express.Router();
 
 // @route   GET tasks/:userId
@@ -76,6 +78,35 @@ router.get("/:userId/:subjectId/:taskId", auth, (req, res) => {
       });
     }
   );
+});
+
+// @route   POST tasks/:userId
+// @desc    Adds a task to the database
+// @access  Private
+router.post("/:userId", auth, validateSID, (req, res) => {
+  const db = admin.database();
+  const { userId } = req.params;
+  const { name, description, type, subjectId, dueDate, reminder, id } = req.body;
+
+  if (!name || !type || !subjectId || !dueDate) {
+    return res.status(400).json({ msg: "Missing parameters." });
+  }
+
+  const task = new Task(name, "", type, subjectId, dueDate, "");
+  const key = db.ref(`tasks/${userId}/${subjectId}`).push().key;
+  task.id = key;
+
+  if (description) task.description = description;
+  if (reminder) task.reminder = reminder;
+
+  const ref = db.ref(`tasks/${userId}/${subjectId}/${key}`);
+
+  try {
+    ref.set(task);
+    res.json({ success: true });
+  } catch (e) {
+    res.json({ success: false, errorMsg: e });
+  }
 });
 
 module.exports = router;

@@ -52,3 +52,5 @@ class Task {
     this.id = id;
   }
 }
+
+module.exports = Task;
