@@ -95,12 +95,16 @@ router.put("/:userId/:subjectId", auth, (req, res) => {
   const subject = new Subject(name, teacher, colorCode, subjectId);
   const ref = db.ref(`subjects/${userId}/${subjectId}`);
 
-  try {
-    ref.set(subject);
-    return res.status(204);
-  } catch (e) {
-    return res.status(500).json({ success: false, errorMsg: e });
-  }
+  ref.once("value", (snapshot) => {
+    if (snapshot.exists()) {
+      ref
+        .update(subject)
+        .then(res.status(204))
+        .catch((e) => res.status(500).json({ success: false, errorMsg: e }));
+    } else {
+      return res.status(400).json({ msg: "Subject does not exist." });
+    }
+  });
 });
 
 module.exports = router;
