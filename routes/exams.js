@@ -92,7 +92,7 @@ router.post("/:userId", auth, validateSID, (req, res) => {
     return res.status(400).json({ msg: "Missing parameters." });
   }
 
-  const exam = new Exam(name, null, subjectId, dueDate, null);
+  const exam = new Exam(name, subjectId, dueDate);
   const key = db.ref(`exams/${userId}/${subjectId}`).push().key;
   exam.id = key;
 
@@ -107,6 +107,38 @@ router.post("/:userId", auth, validateSID, (req, res) => {
   } catch (e) {
     res.status(500).json({ success: false, errorMsg: e });
   }
+});
+
+// @route   PUT exams/:userId/:subjectId/:examId
+// @desc    Updates an existing exam
+// @access  Private
+router.put("/:userId/:subjectId/:examId", auth, (req, res) => {
+  const db = admin.database();
+  const { userId, subjectId, examId } = req.params;
+  const { name, description, dueDate, reminder } = req.body;
+
+  if (!name || !dueDate) {
+    return res.status(400).json({ msg: "Missing parameters." });
+  }
+
+  const exam = new Exam(name, subjectId, dueDate);
+  exam.id = examId;
+
+  if (description) exam.description = description;
+  if (reminder) exam.reminder = reminder;
+
+  const ref = db.ref(`exams/${userId}/${subjectId}/${examId}`);
+
+  ref.once("value", (snapshot) => {
+    if (snapshot.exists()) {
+      ref
+        .update(exam)
+        .then(res.status(204))
+        .catch((e) => res.status(500).json({ success: false, errorMsg: e }));
+    } else {
+      return res.status(400).json({ msg: "Exam does not exist." });
+    }
+  });
 });
 
 module.exports = router;

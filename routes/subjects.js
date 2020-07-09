@@ -80,4 +80,31 @@ router.post("/:userId", auth, (req, res) => {
   }
 });
 
+// @route   PUT subjects/:userId/:subjectId
+// @desc    Updates an existing subject
+// @access  Private
+router.put("/:userId/:subjectId", auth, (req, res) => {
+  const db = admin.database();
+  const { userId, subjectId } = req.params;
+  const { name, teacher, colorCode } = req.body;
+
+  if (!name || !teacher || !colorCode) {
+    return res.status(400).json({ msg: "Missing parameters." });
+  }
+
+  const subject = new Subject(name, teacher, colorCode, subjectId);
+  const ref = db.ref(`subjects/${userId}/${subjectId}`);
+
+  ref.once("value", (snapshot) => {
+    if (snapshot.exists()) {
+      ref
+        .update(subject)
+        .then(res.status(204))
+        .catch((e) => res.status(500).json({ success: false, errorMsg: e }));
+    } else {
+      return res.status(400).json({ msg: "Subject does not exist." });
+    }
+  });
+});
+
 module.exports = router;

@@ -5,23 +5,18 @@
 class Exam {
   /**
    * @param {string}  name - Name of the exam (mandatory)
-   * @param {string}  description - A short description, notes (optional)
    * @param {string}  subjectId - ID of a [Subject] object (mandatory)
    * @param {Date}    dueDate - The date of the exam (mandatory)
+   * @param {string}  description - A short description, notes (optional)
    * @param {Date}    reminder - Date of reminder (optional)
    * @param {string}  id - Unique ID, automatically set
    */
-  constructor(name, description, subjectId, dueDate, reminder = null, id = "") {
+  constructor(name, subjectId, dueDate, description = null, reminder = null, id = "") {
     /**
      * @name  Exam#name
      * @type  {string}
      */
     this.name = name;
-    /**
-     * @name    Exam#description
-     * @type    {string}
-     */
-    this.description = description;
     /**
      * @name    Exam#subjectId
      * @type    {string}
@@ -32,6 +27,11 @@ class Exam {
      * @type    {Date}
      */
     this.dueDate = dueDate;
+    /**
+     * @name    Exam#description
+     * @type    {string}
+     */
+    this.description = description;
     /**
      * @name    Exam#reminder
      * @type    {Date}

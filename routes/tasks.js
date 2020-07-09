@@ -92,7 +92,7 @@ router.post("/:userId", auth, validateSID, (req, res) => {
     return res.status(400).json({ msg: "Missing parameters." });
   }
 
-  const task = new Task(name, null, type, subjectId, dueDate, null);
+  const task = new Task(name, type, subjectId, dueDate);
   const key = db.ref(`tasks/${userId}/${subjectId}`).push().key;
   task.id = key;
 
@@ -107,6 +107,38 @@ router.post("/:userId", auth, validateSID, (req, res) => {
   } catch (e) {
     res.status(500).json({ success: false, errorMsg: e });
   }
+});
+
+// @route   PUT tasks/:userId/:subjectId/:taskId
+// @desc    Updates an existing task
+// @access  Private
+router.put("/:userId/:subjectId/:taskId", auth, (req, res) => {
+  const db = admin.database();
+  const { userId, subjectId, taskId } = req.params;
+  const { name, description, type, dueDate, reminder } = req.body;
+
+  if (!name || !type || !dueDate) {
+    return res.status(400).json({ msg: "Missing parameters." });
+  }
+
+  const task = new Task(name, type, subjectId, dueDate);
+  task.id = taskId;
+
+  if (description) task.description = description;
+  if (reminder) task.reminder = reminder;
+
+  const ref = db.ref(`tasks/${userId}/${subjectId}/${taskId}`);
+
+  ref.once("value", (snapshot) => {
+    if (snapshot.exists()) {
+      ref
+        .update(task)
+        .then(res.status(204))
+        .catch((e) => res.status(500).json({ success: false, errorMsg: e }));
+    } else {
+      return res.status(400).json({ msg: "Task does not exist." });
+    }
+  });
 });
 
 module.exports = router;

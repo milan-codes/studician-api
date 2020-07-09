@@ -106,4 +106,31 @@ router.post("/:userId", auth, validateSID, (req, res) => {
   }
 });
 
+// @route   PUT lessons/:userId/:subjectId/:lessonId
+// @desc    Updates an existing lesson
+// @access  Private
+router.put("/:userId/:subjectId/:lessonId", auth, (req, res) => {
+  const db = admin.database();
+  const { userId, subjectId, lessonId } = req.params;
+  const { week, day, starts, ends, location } = req.body;
+
+  if (!week || !day || !starts || !ends || !location) {
+    return res.status(400).json({ msg: "Missing parameters." });
+  }
+
+  const lesson = new Lesson(subjectId, week, day, starts, ends, location, lessonId);
+  const ref = db.ref(`lessons/${userId}/${subjectId}/${lessonId}`);
+
+  ref.once("value", (snapshot) => {
+    if (snapshot.exists()) {
+      ref
+        .update(lesson)
+        .then(res.status(204))
+        .catch((e) => res.status(500).json({ success: false, errorMsg: e }));
+    } else {
+      return res.status(400).json({ msg: "Lesson does not exist." });
+    }
+  });
+});
+
 module.exports = router;
