@@ -28,13 +28,20 @@ To retrieve
 - All subjects: Make a **GET** request to `/subjects/:userId`
 - A specific subject: Make a **GET** request to `/subjects/:userId/:subjectId`
 
-To add a subject: Make a **POST** request to `/subjects/:userId`
+To add a subject:
 
-The request's body should include:
+- Make a **POST** request to `/subjects/:userId`
+- The request's body should include:
+  - `name`: Name of the subject
+  - `teacher`: Name of the subject's teacher
+  - `colorCode`: Subject will be marked with this color
 
-- `name`: Name of the subject
-- `teacher`: Name of the subject's teacher
-- `colorCode`: Subject will be marked with this color
+To edit a subject:
+
+- Make a **PUT** request to `/subjects/:userId/:subjectId`
+- The request's body should include:
+  - All fields of the subject you want to edit (with the new values)
+  - If you decide not to change something, you have to include the old, unchanged values
 
 ### Lessons
 
@@ -44,16 +51,23 @@ To retrieve
 - A specific subject's lessons: Make a **GET** request to `/lessons/:userId/:subjectId`
 - A specific lesson: Make a **GET** request to `/lessons/:userId/:subjectId/:lessonId`
 
-To add a lesson: Make a **POST** request to `/lessons/:userId`
+To add a lesson:
 
-The request's body should include:
+- Make a **POST** request to `/lessons/:userId`
+- The request's body should include:
+  - `subjectId`: ID of the lesson's subject
+  - `week`: Represents whether the lesson is on Week A or B
+  - `day`: Day of the lesson stored as an integer, 1: Sunday - 7: Saturday
+  - `starts`: Time when lesson starts (format: HH:mm {string})
+  - `ends`: Time when lesson ends(format: HH:mm {string})
+  - `location`: Location of the lesson
 
-- `subjectId`: ID of the lesson's subject
-- `week`: Represents whether the lesson is on Week A or B
-- `day`: Day of the lesson stored as an integer, 1: Sunday - 7: Saturday
-- `starts`: Time when lesson starts (format: HH:mm {string})
-- `ends`: Time when lesson ends(format: HH:mm {string})
-- `location`: Location of the lesson
+To edit a lesson:
+
+- Make a **PUT** request to `lessons/:userId/:subjectId/:lessonId`
+- The request's body should include:
+  - All fields of the lesson you want to edit (with the new values)
+  - If you decide not to change something, you have to include the old, unchanged values
 
 ### Tasks
 
@@ -63,16 +77,23 @@ To retrieve
 - A specific subject's tasks: Make a **GET** request to `/tasks/:userId/:subjectId`
 - A specific task: Make a **GET** request to `/tasks/:userId/:subjectId/:taskId`
 
-To add a task: Make a **POST** request to `/tasks/:userId`
+To add a task:
 
-The request's body should include:
+- Make a **POST** request to `/tasks/:userId`
+- The request's body should include:
+  - `name`: Name of the task
+  - `description`: Description of the task (optional)
+  - `type`: Type of the task, either assignment (1) or revision (2)
+  - `subjectId`: ID of the task's subject
+  - `dueDate`: Due date of the task (Use the format emitted by `Date`'s `toJSON` method: eg.: 2020-01-01T00:00:43.511Z)
+  - `reminder`: Date of reminder (Use the format emitted by `Date`'s `toJSON` method: eg.: 2020-01-01T00:00:43.511Z, optional)
 
-- `name`: Name of the task
-- `description`: Description of the task (optional)
-- `type`: Type of the task, either assignment (1) or revision (2)
-- `subjectId`: ID of the task's subject
-- `dueDate`: Due date of the task (Use the format emitted by `Date`'s `toJSON` method: eg.: 2020-01-01T00:00:43.511Z)
-- `reminder`: Date of reminder (Use the format emitted by `Date`'s `toJSON` method: eg.: 2020-01-01T00:00:43.511Z, optional)
+To edit a task:
+
+- Make a **PUT** request to `tasks/:userId/:subjectId/:taskId`
+- The request's body should include:
+  - All fields of the task you want to edit (with the new values)
+  - If you decide not to change something, you have to include the old, unchanged values
 
 ### Exams
 
@@ -82,12 +103,20 @@ To retrieve
 - A specific subject's exams: Make a **GET** request to `/exams/:userId/:subjectId`
 - A specific exam: Make a **GET** request to `/exams/:userId/:subjectId/:examId`
 
-To add an exam: Make a **POST** request to `/exams/:userId`
+To add an exam:
 
-The request's body should include:
+- Make a **POST** request to `/exams/:userId`
+- The request's body should include:
 
-- `name`: Name of the exam
-- `description`: A short description, notes (optional)
-- `subjectId`: ID of the exam's subject
-- `dueDate`: The date of the exam (Use the format emitted by `Date`'s `toJSON` method: eg.: 2020-01-01T00:00:43.511Z, optional)
-- `reminder`: Date of reminder (Use the format emitted by `Date`'s `toJSON` method: eg.: 2020-01-01T00:00:43.511Z, optional)
+  - `name`: Name of the exam
+  - `description`: A short description, notes (optional)
+  - `subjectId`: ID of the exam's subject
+  - `dueDate`: The date of the exam (Use the format emitted by `Date`'s `toJSON` method: eg.: 2020-01-01T00:00:43.511Z, optional)
+  - `reminder`: Date of reminder (Use the format emitted by `Date`'s `toJSON` method: eg.: 2020-01-01T00:00:43.511Z, optional)
+
+  To edit an exam:
+
+  - Make a **PUT** request to `exams/:userId/:subjectId/:examId`
+  - The request's body should include:
+    - All fields of the exam you want to edit (with the new values)
+    - If you decide not to change something, you have to include the old, unchanged values
