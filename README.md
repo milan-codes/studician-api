@@ -110,7 +110,7 @@ To add an exam:
   - `name`: Name of the exam
   - `description`: A short description, notes (optional)
   - `subjectId`: ID of the exam's subject
-  - `dueDate`: The date of the exam (Use the format emitted by `Date`'s `toJSON` method: eg.: 2020-01-01T00:00:43.511Z, optional)
+  - `dueDate`: The date of the exam (Use the format emitted by `Date`'s `toJSON` method: eg.: 2020-01-01T00:00:43.511Z)
   - `reminder`: Date of reminder (Use the format emitted by `Date`'s `toJSON` method: eg.: 2020-01-01T00:00:43.511Z, optional)
 
 To edit an exam:

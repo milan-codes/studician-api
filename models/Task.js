@@ -5,24 +5,19 @@
 class Task {
   /**
    * @param {string}  name - Name of the task (mandatory)
-   * @param {string}  description - Description of the task (optional)
    * @param {number}  type - Type of the task, either assignment or revision (mandatory)
    * @param {string}  subjectId - ID of the task's subject, a [Subject] ID (mandatory)
    * @param {Date}    dueDate - Due date of the task (mandatory)
+   * @param {string}  description - Description of the task (optional)
    * @param {Date}    reminder - Date of reminder (optional)
    * @param {string}  id - Unique ID, automatically set
    */
-  constructor(name, description, type, subjectId, dueDate, reminder = null, id = "") {
+  constructor(name, type, subjectId, dueDate, description = null, reminder = null, id = "") {
     /**
      * @name    Task#name
      * @type    {string}
      */
     this.name = name;
-    /**
-     * @name    Task#description
-     * @type    {string}
-     */
-    this.description = description;
     /**
      * @name    Task#type
      * @type    {number}
@@ -38,6 +33,11 @@ class Task {
      * @type    {Date}
      */
     this.dueDate = dueDate;
+    /**
+     * @name    Task#description
+     * @type    {string}
+     */
+    this.description = description;
     /**
      * @name    Task#reminder
      * @type    {Date}

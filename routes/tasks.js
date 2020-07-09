@@ -92,7 +92,7 @@ router.post("/:userId", auth, validateSID, (req, res) => {
     return res.status(400).json({ msg: "Missing parameters." });
   }
 
-  const task = new Task(name, null, type, subjectId, dueDate, null);
+  const task = new Task(name, type, subjectId, dueDate);
   const key = db.ref(`tasks/${userId}/${subjectId}`).push().key;
   task.id = key;
 
@@ -121,11 +121,13 @@ router.put("/:userId/:subjectId/:taskId", auth, (req, res) => {
     return res.status(400).json({ msg: "Missing parameters." });
   }
 
-  const task = new Task(name, null, type, subjectId, dueDate, null, taskId);
-  const ref = db.ref(`tasks/${userId}/${subjectId}/${taskId}`);
+  const task = new Task(name, type, subjectId, dueDate);
+  task.id = taskId;
 
   if (description) task.description = description;
   if (reminder) task.reminder = reminder;
+
+  const ref = db.ref(`tasks/${userId}/${subjectId}/${taskId}`);
 
   ref.once("value", (snapshot) => {
     if (snapshot.exists()) {

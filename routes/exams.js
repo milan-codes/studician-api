@@ -92,7 +92,7 @@ router.post("/:userId", auth, validateSID, (req, res) => {
     return res.status(400).json({ msg: "Missing parameters." });
   }
 
-  const exam = new Exam(name, null, subjectId, dueDate, null);
+  const exam = new Exam(name, subjectId, dueDate);
   const key = db.ref(`exams/${userId}/${subjectId}`).push().key;
   exam.id = key;
 
@@ -121,11 +121,13 @@ router.put("/:userId/:subjectId/:examId", auth, (req, res) => {
     return res.status(400).json({ msg: "Missing parameters." });
   }
 
-  const exam = new Exam(name, null, subjectId, dueDate, null, examId);
-  const ref = db.ref(`exams/${userId}/${subjectId}/${examId}`);
+  const exam = new Exam(name, subjectId, dueDate);
+  exam.id = examId;
 
   if (description) exam.description = description;
   if (reminder) exam.reminder = reminder;
+
+  const ref = db.ref(`exams/${userId}/${subjectId}/${examId}`);
 
   ref.once("value", (snapshot) => {
     if (snapshot.exists()) {
