@@ -107,16 +107,15 @@ To add an exam:
 
 - Make a **POST** request to `/exams/:userId`
 - The request's body should include:
-
   - `name`: Name of the exam
   - `description`: A short description, notes (optional)
   - `subjectId`: ID of the exam's subject
   - `dueDate`: The date of the exam (Use the format emitted by `Date`'s `toJSON` method: eg.: 2020-01-01T00:00:43.511Z, optional)
   - `reminder`: Date of reminder (Use the format emitted by `Date`'s `toJSON` method: eg.: 2020-01-01T00:00:43.511Z, optional)
 
-  To edit an exam:
+To edit an exam:
 
-  - Make a **PUT** request to `exams/:userId/:subjectId/:examId`
-  - The request's body should include:
-    - All fields of the exam you want to edit (with the new values)
-    - If you decide not to change something, you have to include the old, unchanged values
+- Make a **PUT** request to `exams/:userId/:subjectId/:examId`
+- The request's body should include:
+  - All fields of the exam you want to edit (with the new values)
+  - If you decide not to change something, you have to include the old, unchanged values
