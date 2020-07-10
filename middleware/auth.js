@@ -16,9 +16,7 @@ function auth(req, res, next) {
       const requestId = req.param.id;
 
       if (uid !== requestId) {
-        return res
-          .status(401)
-          .json({ msg: "Tried to reach another user's data, access denied." });
+        return res.status(401).json({ msg: "Tried to reach another user's data, access denied." });
       } else {
         next();
       }

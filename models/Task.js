@@ -12,15 +12,7 @@ class Task {
    * @param {Date}    reminder - Date of reminder (optional)
    * @param {string}  id - Unique ID, automatically set
    */
-  constructor(
-    name,
-    type,
-    subjectId,
-    dueDate,
-    description = null,
-    reminder = null,
-    id = ''
-  ) {
+  constructor(name, type, subjectId, dueDate, description = null, reminder = null, id = '') {
     /**
      * @name    Task#name
      * @type    {string}

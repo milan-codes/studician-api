@@ -118,15 +118,7 @@ router.put('/:userId/:subjectId/:lessonId', auth, (req, res) => {
     return res.status(400).json({ msg: 'Missing parameters.' });
   }
 
-  const lesson = new Lesson(
-    subjectId,
-    week,
-    day,
-    starts,
-    ends,
-    location,
-    lessonId
-  );
+  const lesson = new Lesson(subjectId, week, day, starts, ends, location, lessonId);
   const ref = db.ref(`lessons/${userId}/${subjectId}/${lessonId}`);
 
   ref.once('value', (snapshot) => {
@@ -154,9 +146,7 @@ router.delete('/:userId/:subjectId/:lessonId', auth, (req, res) => {
     ref.set(null);
     return res.status(204);
   } catch (e) {
-    return res
-      .status(500)
-      .json({ msg: 'Error while processing your request.', errorMsg: e });
+    return res.status(500).json({ msg: 'Error while processing your request.', errorMsg: e });
   }
 });
 

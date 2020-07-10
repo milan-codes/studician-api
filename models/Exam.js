@@ -11,14 +11,7 @@ class Exam {
    * @param {Date}    reminder - Date of reminder
    * @param {string}  id - Unique ID, automatically set
    */
-  constructor(
-    name,
-    subjectId,
-    dueDate,
-    description = null,
-    reminder = null,
-    id = ''
-  ) {
+  constructor(name, subjectId, dueDate, description = null, reminder = null, id = '') {
     /**
      * @name  Exam#name
      * @type  {string}
