@@ -141,4 +141,21 @@ router.put("/:userId/:subjectId/:examId", auth, (req, res) => {
   });
 });
 
+// @route   DELETE exams/:userId/:subjectId/:examId
+// @desc    Deletes an exam
+// @access  Private
+router.delete("/:userId/:subjectId/:examId", auth, (req, res) => {
+  const db = admin.database();
+  const { userId, subjectId, examId } = req.params;
+
+  const ref = db.ref(`exams/${userId}/${subjectId}/${examId}`);
+
+  try {
+    ref.set(null);
+    return res.status(204);
+  } catch (e) {
+    return res.status(500).json({ msg: "Error while processing your request", errorMsg: e });
+  }
+});
+
 module.exports = router;
