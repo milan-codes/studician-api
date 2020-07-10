@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "server": "nodemon server.js"
+    "server": "nodemon server.js",
+    "pretest": "eslint --ignore-path .gitignore ."
   },
   "author": "milan-codes",
   "license": "GPL-3.0",
@@ -19,6 +20,8 @@
     "jsonwebtoken": "^8.5.1"
   },
   "devDependencies": {
+    "eslint": "^7.4.0",
+    "eslint-config-strongloop": "^2.1.0",
     "nodemon": "^2.0.4"
   }
 }
