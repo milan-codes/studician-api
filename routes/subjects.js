@@ -107,4 +107,28 @@ router.put("/:userId/:subjectId", auth, (req, res) => {
   });
 });
 
+// @route   DELETE subjects/:userId/:subjectId
+// @desc    Deletes a subject and all of its lessons, tasks & exams.
+// @access  Private
+router.delete("/:userId/:subjectId", (req, res) => {
+  const db = admin.database();
+  const { userId, subjectId } = req.params;
+
+  const subjects = db.ref(`subjects/${userId}/${subjectId}`);
+  const lessons = db.ref(`lessons/${userId}/${subjectId}`);
+  const tasks = db.ref(`tasks/${userId}/${subjectId}`);
+  const exams = db.ref(`exams/${userId}/${subjectId}`);
+
+  try {
+    subjects.set(null);
+    lessons.set(null);
+    tasks.set(null);
+    exams.set(null);
+
+    return res.status(204);
+  } catch (e) {
+    return res.status(500).json({ msg: "Error while processing your request.", errorMsg: e });
+  }
+});
+
 module.exports = router;
