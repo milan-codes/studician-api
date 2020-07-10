@@ -110,7 +110,7 @@ router.put("/:userId/:subjectId", auth, (req, res) => {
 // @route   DELETE subjects/:userId/:subjectId
 // @desc    Deletes a subject and all of its lessons, tasks & exams.
 // @access  Private
-router.delete("/:userId/:subjectId", (req, res) => {
+router.delete("/:userId/:subjectId", auth, (req, res) => {
   const db = admin.database();
   const { userId, subjectId } = req.params;
 
