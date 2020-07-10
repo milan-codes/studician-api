@@ -136,7 +136,7 @@ router.put("/:userId/:subjectId/:lessonId", auth, (req, res) => {
 // @route   DELETE lessons/:userId/:subjectId/:lessonId
 // @desc    Deletes a lesson
 // @access  Private
-router.delete("/:userId/:subjectId/:lessonId", (req, res) => {
+router.delete("/:userId/:subjectId/:lessonId", auth, (req, res) => {
   const db = admin.database();
   const { userId, subjectId, lessonId } = req.params;
 
