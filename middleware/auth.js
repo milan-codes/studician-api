@@ -1,11 +1,11 @@
-const admin = require("firebase-admin");
+const admin = require('firebase-admin');
 
 function auth(req, res, next) {
-  const token = req.header("x-auth-token");
+  const token = req.header('x-auth-token');
 
   // Check if token were sent
   if (!token) {
-    return res.status(401).json({ msg: "No token, access denied." });
+    return res.status(401).json({ msg: 'No token, access denied.' });
   }
 
   admin
@@ -15,7 +15,7 @@ function auth(req, res, next) {
       const uid = decodedToken.uid;
       const requestId = req.param.id;
 
-      if (uid != requestId) {
+      if (uid !== requestId) {
         return res
           .status(401)
           .json({ msg: "Tried to reach another user's data, access denied." });
@@ -24,7 +24,7 @@ function auth(req, res, next) {
       }
     })
     .catch((e) => {
-      res.status(400).json({ msg: "Invalid token." });
+      res.status(400).json({ msg: 'Invalid token.' });
     });
 }
 

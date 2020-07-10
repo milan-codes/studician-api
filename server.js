@@ -1,9 +1,9 @@
-const express = require("express");
-const admin = require("firebase-admin");
-const serviceAccount = require("./secrets/serviceAccount.json");
+const express = require('express');
+const admin = require('firebase-admin');
+const serviceAccount = require('./secrets/serviceAccount.json');
 
 const app = express();
-require("dotenv").config();
+require('dotenv').config();
 
 // Bodyparser middleware
 app.use(express.json());
@@ -14,10 +14,10 @@ admin.initializeApp({
   databaseURL: process.env.DATABASE_URL,
 });
 
-app.use("/subjects", require("./routes/subjects"));
-app.use("/lessons", require("./routes/lessons"));
-app.use("/tasks", require("./routes/tasks"));
-app.use("/exams", require("./routes/exams"));
+app.use('/subjects', require('./routes/subjects'));
+app.use('/lessons', require('./routes/lessons'));
+app.use('/tasks', require('./routes/tasks'));
+app.use('/exams', require('./routes/exams'));
 
 const port = process.env.PORT || 5000;
 

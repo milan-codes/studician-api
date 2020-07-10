@@ -4,14 +4,21 @@
  */
 class Exam {
   /**
-   * @param {string}  name - Name of the exam (mandatory)
-   * @param {string}  subjectId - ID of a [Subject] object (mandatory)
-   * @param {Date}    dueDate - The date of the exam (mandatory)
-   * @param {string}  description - A short description, notes (optional)
-   * @param {Date}    reminder - Date of reminder (optional)
+   * @param {string}  name - Name of the exam
+   * @param {string}  subjectId - ID of a [Subject] object
+   * @param {Date}    dueDate - The date of the exam
+   * @param {string}  description - A short description, notes
+   * @param {Date}    reminder - Date of reminder
    * @param {string}  id - Unique ID, automatically set
    */
-  constructor(name, subjectId, dueDate, description = null, reminder = null, id = "") {
+  constructor(
+    name,
+    subjectId,
+    dueDate,
+    description = null,
+    reminder = null,
+    id = ''
+  ) {
     /**
      * @name  Exam#name
      * @type  {string}
