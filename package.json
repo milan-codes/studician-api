@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "server": "nodemon server.js",
-    "pretest": "eslint --ignore-path .gitignore ."
+    "posttest": "eslint --ignore-path .gitignore .",
+    "test": "mocha --timeout 10000"
   },
   "author": "milan-codes",
   "license": "GPL-3.0",
@@ -17,11 +18,18 @@
     "express": "^4.17.1",
     "firebase": "^7.15.5",
     "firebase-admin": "^8.13.0",
-    "jsonwebtoken": "^8.5.1"
+    "firebase-tools": "^8.5.0",
+    "jsonwebtoken": "^8.5.1",
+    "request-promise": "^4.2.5"
   },
   "devDependencies": {
+    "@firebase/testing": "^0.20.6",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "eslint": "^7.4.0",
     "eslint-config-strongloop": "^2.1.0",
-    "nodemon": "^2.0.4"
+    "mocha": "^8.0.1",
+    "nodemon": "^2.0.4",
+    "supertest": "^4.0.2"
   }
 }

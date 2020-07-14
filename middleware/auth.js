@@ -15,10 +15,14 @@ function auth(req, res, next) {
       const uid = decodedToken.uid;
       const requestId = req.param.id;
 
-      if (uid !== requestId) {
-        return res.status(401).json({ msg: "Tried to reach another user's data, access denied." });
-      } else {
+      if (process.env.NODE_ENV === 'dev') {
         next();
+      } else {
+        if (uid !== requestId) {
+          return res.status(401).json({ msg: "Tried to reach another user's data, access denied." });
+        } else {
+          next();
+        }
       }
     })
     .catch((e) => {

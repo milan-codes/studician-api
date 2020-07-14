@@ -12,16 +12,16 @@ router.get('/:userId', auth, (req, res) => {
   const { userId } = req.params;
   const ref = db.ref(`/subjects/${userId}`);
 
-  ref.on(
+  ref.once(
     'value',
     (subjects) => {
       if (!subjects.exists()) {
-        return res.json({ msg: 'Could not find requested subjects.' });
+        return res.status(400).json({ msg: 'Could not find requested subjects.' });
       }
-      return res.json(subjects);
+      return res.status(200).json(subjects);
     },
     (e) => {
-      return res.json({
+      return res.status(500).json({
         msg: 'Error while trying to fetch requested subjects.',
         errorMsg: e,
       });
