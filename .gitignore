@@ -5,3 +5,4 @@ secrets
 *-debug.log
 .firebaserc
 firebase.json
+database.rules.json

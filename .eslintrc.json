@@ -1,13 +1,23 @@
 {
   "extends": "strongloop",
   "parserOptions": {
-    "ecmaVersion": 6,
+    "ecmaVersion": 2020,
     "sourceType": "module"
   },
   "rules": {
-    "max-len": [2, 120, 8]
+    "max-len": [2, 120, 8],
+    "space-before-function-paren": [
+      "error",
+      {
+        "anonymous": "ignore",
+        "named": "ignore",
+        "asyncArrow": "ignore"
+      }
+    ]
   },
   "env": {
-    "es6": true
+    "es6": true,
+    "node": true,
+    "mocha": true
   }
 }

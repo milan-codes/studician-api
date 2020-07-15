@@ -16,7 +16,7 @@ router.get('/:userId', auth, (req, res) => {
     'value',
     (subjects) => {
       if (!subjects.exists()) {
-        return res.status(400).json({ msg: 'Could not find requested subjects.' });
+        return res.status(200).json({});
       }
       return res.status(200).json(subjects);
     },
@@ -41,9 +41,9 @@ router.get('/:userId/:subjectId', auth, (req, res) => {
     'value',
     (subject) => {
       if (!subject.exists()) {
-        return res.json({ msg: 'Could not find requested subject.' });
+        return res.status(200).json({});
       }
-      return res.json(subject);
+      return res.status(200).json(subject);
     },
     (e) => {
       return res.json({
@@ -74,7 +74,7 @@ router.post('/:userId', auth, (req, res) => {
 
   try {
     ref.set(subject);
-    res.status(201).json({ success: true });
+    res.status(201).json(subject);
   } catch (e) {
     res.status(500).json({ success: false, errorMsg: e });
   }
@@ -99,10 +99,10 @@ router.put('/:userId/:subjectId', auth, (req, res) => {
     if (snapshot.exists()) {
       ref
         .update(subject)
-        .then(res.status(204))
+        .then(res.status(204).end())
         .catch((e) => res.status(500).json({ success: false, errorMsg: e }));
     } else {
-      return res.status(400).json({ msg: 'Subject does not exist.' });
+      return res.status(404).json({ msg: 'Subject does not exist.' });
     }
   });
 });
@@ -125,7 +125,7 @@ router.delete('/:userId/:subjectId', auth, (req, res) => {
     tasks.set(null);
     exams.set(null);
 
-    return res.status(204);
+    return res.status(204).end();
   } catch (e) {
     return res.status(500).json({ msg: 'Error while processing your request.', errorMsg: e });
   }

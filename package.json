@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "server": "nodemon server.js",
-    "posttest": "eslint --ignore-path .gitignore .",
-    "test": "mocha --timeout 10000"
+    "lint": "eslint --ignore-path .gitignore .",
+    "test": "mocha --timeout 10000 --exit"
   },
   "author": "milan-codes",
   "license": "GPL-3.0",
