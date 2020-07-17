@@ -43,6 +43,11 @@ To edit a subject:
   - All fields of the subject you want to edit (with the new values)
   - If you decide not to change something, you have to include the old, unchanged values
 
+To delete a subject:
+
+- Make a **DELETE** request to: `subjects/:userId/:subjectId`
+  - This will also delete all lessons, tasks & exams that have the specified `subjectId`
+
 ### Lessons
 
 To retrieve
@@ -68,6 +73,10 @@ To edit a lesson:
 - The request's body should include:
   - All fields of the lesson you want to edit (with the new values)
   - If you decide not to change something, you have to include the old, unchanged values
+
+To delete a lesson:
+
+- Make a **DELETE** request to `lessons/:userId/:subjectId/:lessonId`
 
 ### Tasks
 
@@ -95,6 +104,10 @@ To edit a task:
   - All fields of the task you want to edit (with the new values)
   - If you decide not to change something, you have to include the old, unchanged values
 
+To delete a task:
+
+- Make a **DELETE** request to: `tasks/:userId/:subjectId/:taskId`
+
 ### Exams
 
 To retrieve
@@ -119,3 +132,7 @@ To edit an exam:
 - The request's body should include:
   - All fields of the exam you want to edit (with the new values)
   - If you decide not to change something, you have to include the old, unchanged values
+
+To delete an exam:
+
+- Make a **DELETE** request to: `exams/:userId/:subjectId/:examId`

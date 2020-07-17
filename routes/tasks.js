@@ -141,4 +141,21 @@ router.put("/:userId/:subjectId/:taskId", auth, (req, res) => {
   });
 });
 
+// @route   DELETE tasks/:userId/:subjectId/:taskId
+// @desc    Deletes a task
+// @access  Private
+router.delete("/:userId/:subjectId/:taskId", auth, (req, res) => {
+  const db = admin.database();
+  const { userId, subjectId, taskId } = req.params;
+
+  const ref = db.ref(`tasks/${userId}/${subjectId}/${taskId}`);
+
+  try {
+    ref.set(null);
+    return res.status(204);
+  } catch (e) {
+    return res.status(500).json({ msg: "Error while processing your request", errorMsg: e });
+  }
+});
+
 module.exports = router;

@@ -133,4 +133,21 @@ router.put("/:userId/:subjectId/:lessonId", auth, (req, res) => {
   });
 });
 
+// @route   DELETE lessons/:userId/:subjectId/:lessonId
+// @desc    Deletes a lesson
+// @access  Private
+router.delete("/:userId/:subjectId/:lessonId", auth, (req, res) => {
+  const db = admin.database();
+  const { userId, subjectId, lessonId } = req.params;
+
+  const ref = db.ref(`lessons/${userId}/${subjectId}/${lessonId}`);
+
+  try {
+    ref.set(null);
+    return res.status(204);
+  } catch (e) {
+    return res.status(500).json({ msg: "Error while processing your request.", errorMsg: e });
+  }
+});
+
 module.exports = router;
