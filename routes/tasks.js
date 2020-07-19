@@ -13,11 +13,11 @@ router.get('/:userId', auth, (req, res) => {
   const { userId } = req.params;
   const ref = db.ref(`/tasks/${userId}`);
 
-  ref.on(
+  ref.once(
     'value',
     (tasks) => {
       if (!tasks.exists()) {
-        return res.json({ msg: 'Could not find requested tasks.' });
+        return res.json({});
       }
       return res.json(tasks);
     },
@@ -26,7 +26,7 @@ router.get('/:userId', auth, (req, res) => {
         msg: 'Error while trying to fetch requested tasks.',
         errorMsg: e,
       });
-    }
+    },
   );
 });
 
@@ -38,11 +38,11 @@ router.get('/:userId/:subjectId', auth, (req, res) => {
   const { userId, subjectId } = req.params;
   const ref = db.ref(`/tasks/${userId}/${subjectId}`);
 
-  ref.on(
+  ref.once(
     'value',
     (tasks) => {
       if (!tasks.exists()) {
-        return res.json({ msg: "Could not find requested subject's tasks." });
+        return res.json({});
       }
       return res.json(tasks);
     },
@@ -51,7 +51,7 @@ router.get('/:userId/:subjectId', auth, (req, res) => {
         msg: "Error while trying to fetch requested subject's tasks.",
         errorMsg: e,
       });
-    }
+    },
   );
 });
 
@@ -76,7 +76,7 @@ router.get('/:userId/:subjectId/:taskId', auth, (req, res) => {
         msg: 'Error while trying to fetch requsted task.',
         errorMsg: e,
       });
-    }
+    },
   );
 });
 
@@ -103,7 +103,7 @@ router.post('/:userId', auth, validateSID, (req, res) => {
 
   try {
     ref.set(task);
-    res.status(201).json({ success: true });
+    res.status(201).json(task);
   } catch (e) {
     res.status(500).json({ success: false, errorMsg: e });
   }
@@ -133,10 +133,10 @@ router.put('/:userId/:subjectId/:taskId', auth, (req, res) => {
     if (snapshot.exists()) {
       ref
         .update(task)
-        .then(res.status(204))
+        .then(res.status(204).end())
         .catch((e) => res.status(500).json({ success: false, errorMsg: e }));
     } else {
-      return res.status(400).json({ msg: 'Task does not exist.' });
+      return res.status(404).json({ msg: 'Task does not exist.' });
     }
   });
 });
@@ -152,7 +152,7 @@ router.delete('/:userId/:subjectId/:taskId', auth, (req, res) => {
 
   try {
     ref.set(null);
-    return res.status(204);
+    return res.status(204).end();
   } catch (e) {
     return res.status(500).json({ msg: 'Error while processing your request', errorMsg: e });
   }
