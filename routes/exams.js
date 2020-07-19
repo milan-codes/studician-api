@@ -13,20 +13,20 @@ router.get('/:userId', auth, (req, res) => {
   const { userId } = req.params;
   const ref = db.ref(`/exams/${userId}`);
 
-  ref.on(
+  ref.once(
     'value',
     (exams) => {
       if (!exams.exists()) {
-        return res.json({ msg: 'Could not find requested exams.' });
+        return res.status(200).json({});
       }
-      return res.json(exams);
+      return res.status(200).json(exams);
     },
     (e) => {
-      return res.json({
+      return res.status(500).json({
         msg: 'Error while trying to fetch requested exams.',
         errorMsg: e,
       });
-    }
+    },
   );
 });
 
@@ -38,20 +38,20 @@ router.get('/:userId/:subjectId', auth, (req, res) => {
   const { userId, subjectId } = req.params;
   const ref = db.ref(`/exams/${userId}/${subjectId}`);
 
-  ref.on(
+  ref.once(
     'value',
     (exams) => {
       if (!exams.exists()) {
-        return res.json({ msg: "Could not find requested subject's exams." });
+        return res.status(200).json({});
       }
-      return res.json(exams);
+      return res.status(200).json(exams);
     },
     (e) => {
-      return res.json({
+      return res.status(500).json({
         msg: "Error while trying to fetch requested subject's exams.",
         errorMsg: e,
       });
-    }
+    },
   );
 });
 
@@ -67,16 +67,16 @@ router.get('/:userId/:subjectId/:examId', auth, (req, res) => {
     'value',
     (exam) => {
       if (!exam.exists()) {
-        return res.json({ msg: 'Could not find requested exam.' });
+        return res.status(200).json({});
       }
-      return res.json(exam);
+      return res.status(200).json(exam);
     },
     (e) => {
-      return res.json({
+      return res.status(500).json({
         msg: 'Error while trying to fetch requsted exam.',
         errorMsg: e,
       });
-    }
+    },
   );
 });
 
@@ -103,7 +103,7 @@ router.post('/:userId', auth, validateSID, (req, res) => {
 
   try {
     ref.set(exam);
-    res.status(201).json({ success: true });
+    res.status(201).json(exam);
   } catch (e) {
     res.status(500).json({ success: false, errorMsg: e });
   }
@@ -133,10 +133,10 @@ router.put('/:userId/:subjectId/:examId', auth, (req, res) => {
     if (snapshot.exists()) {
       ref
         .update(exam)
-        .then(res.status(204))
+        .then(res.status(204).end())
         .catch((e) => res.status(500).json({ success: false, errorMsg: e }));
     } else {
-      return res.status(400).json({ msg: 'Exam does not exist.' });
+      return res.status(404).json({ msg: 'Exam does not exist.' });
     }
   });
 });
@@ -152,7 +152,7 @@ router.delete('/:userId/:subjectId/:examId', auth, (req, res) => {
 
   try {
     ref.set(null);
-    return res.status(204);
+    return res.status(204).end();
   } catch (e) {
     return res.status(500).json({ msg: 'Error while processing your request', errorMsg: e });
   }
