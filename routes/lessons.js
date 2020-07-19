@@ -13,20 +13,20 @@ router.get('/:userId', auth, (req, res) => {
   const { userId } = req.params;
   const ref = db.ref(`/lessons/${userId}`);
 
-  ref.on(
+  ref.once(
     'value',
     (lessons) => {
       if (!lessons.exists()) {
-        return res.json({ msg: 'Could not find requested lessons.' });
+        return res.status(200).json({});
       }
-      return res.json(lessons);
+      return res.status(200).json(lessons);
     },
     (e) => {
-      return res.json({
+      return res.status(500).json({
         msg: 'Error while trying to fetch requested lessons.',
         errorMsg: e,
       });
-    }
+    },
   );
 });
 
@@ -38,20 +38,20 @@ router.get('/:userId/:subjectId', auth, (req, res) => {
   const { userId, subjectId } = req.params;
   const ref = db.ref(`/lessons/${userId}/${subjectId}`);
 
-  ref.on(
+  ref.once(
     'value',
     (lessons) => {
       if (!lessons.exists()) {
-        return res.json({ msg: "Could not find requested subject's lesson." });
+        return res.status(200).json({});
       }
-      return res.json(lessons);
+      return res.status(200).json(lessons);
     },
     (e) => {
-      return res.json({
+      return res.status(500).json({
         msg: "Error while trying to fetch requested subject's lessons.",
         errorMsg: e,
       });
-    }
+    },
   );
 });
 
@@ -67,16 +67,16 @@ router.get('/:userId/:subjectId/:lessonId', auth, (req, res) => {
     'value',
     (lesson) => {
       if (!lesson.exists()) {
-        return res.json({ msg: 'Could not find requested lesson.' });
+        return res.status(200).json({});
       }
-      return res.json(lesson);
+      return res.status(200).json(lesson);
     },
     (e) => {
-      return res.json({
+      return res.status(500).json({
         msg: 'Error while trying to fetch requsted lesson.',
         errorMsg: e,
       });
-    }
+    },
   );
 });
 
@@ -100,7 +100,7 @@ router.post('/:userId', auth, validateSID, (req, res) => {
 
   try {
     ref.set(lesson);
-    res.status(201).json({ success: true });
+    res.status(201).json(lesson);
   } catch (e) {
     res.status(500).json({ success: false, errorMsg: e });
   }
@@ -125,10 +125,10 @@ router.put('/:userId/:subjectId/:lessonId', auth, (req, res) => {
     if (snapshot.exists()) {
       ref
         .update(lesson)
-        .then(res.status(204))
+        .then(res.status(204).end())
         .catch((e) => res.status(500).json({ success: false, errorMsg: e }));
     } else {
-      return res.status(400).json({ msg: 'Lesson does not exist.' });
+      return res.status(404).json({ msg: 'Lesson does not exist.' });
     }
   });
 });
@@ -144,7 +144,7 @@ router.delete('/:userId/:subjectId/:lessonId', auth, (req, res) => {
 
   try {
     ref.set(null);
-    return res.status(204);
+    return res.status(204).end();
   } catch (e) {
     return res.status(500).json({ msg: 'Error while processing your request.', errorMsg: e });
   }

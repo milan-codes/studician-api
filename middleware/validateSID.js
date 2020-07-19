@@ -14,7 +14,7 @@ function validateSID(req, res, next) {
   const db = admin.database();
   const ref = db.ref(`subjects/${userId}/${subjectId}`);
 
-  ref.on('value', (snapshot) => {
+  ref.once('value', (snapshot) => {
     if (snapshot.exists()) {
       next();
     } else {
