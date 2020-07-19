@@ -12,10 +12,18 @@ After you forked and cloned the repository, run `npm i` and create a `secrets` f
 
 In order to run this application you must have a Firebase project set up. If you are logged in to your Google account, you can easily add a new project in [Firebase Console](https://console.firebase.google.com). Once you've done that, you need to **generate a private key file** from Firebase Console. (In Firebase Console: Project Settings -> Service accounts -> Generate new private key) and put it under api\secrects\, the folder you previously created, so the path to the file would look like this: `api\secrets\service-account-file.json`. After that, you're ready to develop!
 
+### Setting up testing environment
+
+We're testing our code with the Mocha testing framework and Chai assertion library. Firebase Emulators provide our test databases. In order to set up Firebase Emulators, you must install Firebase CLI either globally with `npm i -g firebase-tools`, or if you are using npm 5.2 or higher, you can simply use `npx` to run the packages globally. In order to set up the emulators correctly, you'll need `Node.js 8.6.0 or higher` and `Java 7 or higher`. You can check your Node version with `node --version` and your Java version with `java --version`.
+Once you've installed everything that is needed, run `firebase login`. After you log in, run `firebase init`. Select the features you want to set up in the project's folder (_Emulators_), select the emulators you want to install (_Database_), select whether you want to install the Emulator UI (recommended), and that's it!. You can start the emulator(s) with `firebase emulators:start`
+
 ### Docs
 
 - [Node.js](https://nodejs.org/en/docs/)
 - [Firebase](https://firebase.google.com/docs)
+- [Setting up the Firebase emulators](https://firebase.google.com/docs/rules/emulator-setup)
+- [Mocha](https://mochajs.org/)
+- [Chai](https://www.chaijs.com/)
 
 ## API routes
 

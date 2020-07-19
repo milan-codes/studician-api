@@ -12,18 +12,13 @@ function auth(req, res, next) {
     .auth()
     .verifyIdToken(token)
     .then((decodedToken) => {
-      const uid = decodedToken.uid;
-      const requestId = req.param.id;
-      const dev = process.env.NODE_ENV === 'dev';
+      const { uid } = decodedToken;
+      const { userId } = req.params;
 
-      if (dev) {
-        next();
+      if (uid !== userId) {
+        return res.status(401).json({ msg: "Tried to reach another user's data, access denied." });
       } else {
-        if (uid !== requestId) {
-          return res.status(401).json({ msg: "Tried to reach another user's data, access denied." });
-        } else {
-          next();
-        }
+        next();
       }
     })
     .catch((e) => {

@@ -18,7 +18,7 @@ function validateSID(req, res, next) {
     if (snapshot.exists()) {
       next();
     } else {
-      return res.status(400).json({ msg: 'Subject does not exist.' });
+      return res.status(404).json({ msg: 'Subject does not exist.' });
     }
   });
 }

@@ -12,8 +12,11 @@ describe('Subject routes tests', () => {
   let authToken;
   let addedSubject;
 
+  // Emptying the database
   before(() => {
     admin.database().ref('/').set(null);
+
+    // Getting token to bypass authentication
     return testUtils.getTestIdToken('testuser').then((token) => (authToken = token));
   });
 

@@ -13,6 +13,7 @@ describe('Lesson routes tests', () => {
   let testSubject;
   let testLesson;
 
+  // Emptying the database and creating a test subject
   before(() => {
     admin.database().ref('/').set(null);
 
@@ -25,6 +26,7 @@ describe('Lesson routes tests', () => {
     admin.database().ref('subjects/testuser/testsubject').set(dummySubject);
     testSubject = dummySubject;
 
+    // Getting token to bypass authentication
     return testUtils.getTestIdToken('testuser').then((token) => (authToken = token));
   });
 
@@ -176,5 +178,10 @@ describe('Lesson routes tests', () => {
           done();
         });
     });
+  });
+
+  // Deleting test subject
+  after(() => {
+    admin.database().ref(`/subjects/testuser/${testSubject.id}`).set(null);
   });
 });
