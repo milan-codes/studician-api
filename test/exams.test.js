@@ -118,7 +118,7 @@ describe('Exam routes tests', () => {
   });
 
   describe('PUT exams/:userId/:subjectId/:examId', () => {
-    it('should update the previously added lesson', (done) => {
+    it('should update the previously added exam', (done) => {
       const exam = {
         name: 'PUT api test',
         description: 'PUT api test',

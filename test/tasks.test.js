@@ -119,7 +119,7 @@ describe('Task routes tests', () => {
   });
 
   describe('PUT tasks/:userId/:subjectId/:taskId', () => {
-    it('should update the previously added lesson', (done) => {
+    it('should update the previously added exam', (done) => {
       const task = {
         name: 'PUT api test',
         description: 'PUT api test',
@@ -168,7 +168,7 @@ describe('Task routes tests', () => {
     it('should delete the previously added task', (done) => {
       chai
         .request(server)
-        .delete(`/lessons/testuser/${testSubject.id}/${testTask.id}`)
+        .delete(`/tasks/testuser/${testSubject.id}/${testTask.id}`)
         .set('x-auth-token', authToken)
         .end((err, res) => {
           if (err) throw Error(err);

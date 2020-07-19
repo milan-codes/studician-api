@@ -14,8 +14,9 @@ function auth(req, res, next) {
     .then((decodedToken) => {
       const uid = decodedToken.uid;
       const requestId = req.param.id;
+      const dev = process.env.NODE_ENV === 'dev';
 
-      if (process.env.NODE_ENV === 'dev') {
+      if (dev) {
         next();
       } else {
         if (uid !== requestId) {
@@ -26,7 +27,7 @@ function auth(req, res, next) {
       }
     })
     .catch((e) => {
-      res.status(400).json({ msg: 'Invalid token.' });
+      return res.status(400).json({ msg: 'Invalid token.' });
     });
 }
 

@@ -55,7 +55,7 @@ describe('Subject routes tests', () => {
   });
 
   describe('POST subjects/:userId', () => {
-    it('should throw an error because required parameters are missing from the body, therefore subject cannot be created', (done) => {
+    it('should throw an error because required parameters are missing from the body', (done) => {
       const subject = {
         name: 'POST API test',
       };
@@ -109,7 +109,7 @@ describe('Subject routes tests', () => {
   });
 
   describe('PUT subjects/:userId/:subjectId', () => {
-    it('should throw an error, because the requested subject does not exist, therefore there is nothing to update', (done) => {
+    it('should throw an error, because the requested subject does not exist', (done) => {
       const subject = {
         name: 'PUT API test',
         teacher: 'PUT API test',
@@ -117,7 +117,7 @@ describe('Subject routes tests', () => {
       };
       chai
         .request(server)
-        .put(`/subjects/testuser/non-existing-subject`)
+        .put('/subjects/testuser/non-existing-subject')
         .set('x-auth-token', authToken)
         .send(subject)
         .end((err, res) => {
@@ -128,7 +128,7 @@ describe('Subject routes tests', () => {
     });
   });
 
-  describe('DELETE subjects/:uerId/:subjectId', () => {
+  describe('DELETE subjects/:userId/:subjectId', () => {
     it('should delete the previously added subject', (done) => {
       chai
         .request(server)

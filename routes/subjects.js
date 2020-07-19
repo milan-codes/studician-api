@@ -25,7 +25,7 @@ router.get('/:userId', auth, (req, res) => {
         msg: 'Error while trying to fetch requested subjects.',
         errorMsg: e,
       });
-    }
+    },
   );
 });
 
@@ -50,7 +50,7 @@ router.get('/:userId/:subjectId', auth, (req, res) => {
         msg: 'Error while trying to fetch requested subject.',
         errorMsg: e,
       });
-    }
+    },
   );
 });
 
