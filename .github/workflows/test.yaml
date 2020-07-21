@@ -3,9 +3,6 @@ name: CI Tests
 on:
   - pull_request
   - push
-  
-  release:
-    type: [created]
 
 jobs:
   test:
