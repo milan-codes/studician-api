@@ -1,10 +1,9 @@
-name: test
-# This workflow is trigged on pushes to the master repository
+name: CI Tests
+
 on:
-  push:
-    branches:
-      - master
-      - testing-setup
+  - pull_request
+  - push
+  
   release:
     type: [created]
 
