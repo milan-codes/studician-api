@@ -1,0 +1,41 @@
+name: test
+# This workflow is trigged on pushes to the master repository
+on:
+  push:
+    branches:
+      - master
+      - testing-setup
+  release:
+    type: [created]
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Installing dependecies
+        run: npm install
+
+      - name: Building project
+        run: npm run build --if-present
+
+      - name: Starting Firebase Emulators & running tests
+        env:
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_DATABASE_URL: ${{ secrets.FIREBASE_DATABASE_URL }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
+          FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
+        run: npx firebase emulators:exec 'sh ./shellscripts/run-tests.sh' --only database
