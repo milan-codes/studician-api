@@ -1,6 +1,6 @@
-# API of the MyStudiez apps.
+# Studician API.
 
-This repository contains the API of the MyStudiez platform.
+![CI Tests](https://github.com/Studician/api/workflows/CI%20Tests/badge.svg)
 
 ## Tech used
 
