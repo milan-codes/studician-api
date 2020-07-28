@@ -4,12 +4,12 @@
  */
 class Subject {
   /**
-   * @param {string}  name - Name of the subject (mandatory)
-   * @param {string}  teacher - Name of the subject's teacher (mandatory)
-   * @param {number}  colorCode - Subject will be marked with this color (mandatory)
+   * @param {string}  name - Name of the subject
+   * @param {string}  teacher - Name of the subject's teacher
+   * @param {number}  colorCode - Subject will be marked with this color
    * @param {string}  id - Unique ID, automatically set
    */
-  constructor(name, teacher, colorCode, id = "") {
+  constructor(name, teacher, colorCode, id = '') {
     /**
      * @name  Subject#name
      * @type  {string}

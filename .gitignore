@@ -1,4 +1,7 @@
 node_modules
 package-lock.json
-secrets
 .env
+*-debug.log
+.firebaserc
+firebase.json
+database.rules.json

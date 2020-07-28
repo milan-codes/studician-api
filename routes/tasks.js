@@ -1,48 +1,48 @@
-const admin = require("firebase-admin");
-const auth = require("../middleware/auth");
-const express = require("express");
-const Task = require("../models/Task");
-const validateSID = require("../middleware/validateSID");
+const admin = require('firebase-admin');
+const auth = require('../middleware/auth');
+const express = require('express');
+const Task = require('../models/Task');
+const validateSID = require('../middleware/validateSID');
 const router = express.Router();
 
 // @route   GET tasks/:userId
 // @desc    Gets all subject's tasks
 // @access  Private
-router.get("/:userId", auth, (req, res) => {
+router.get('/:userId', auth, (req, res) => {
   const db = admin.database();
   const { userId } = req.params;
   const ref = db.ref(`/tasks/${userId}`);
 
-  ref.on(
-    "value",
+  ref.once(
+    'value',
     (tasks) => {
       if (!tasks.exists()) {
-        return res.json({ msg: "Could not find requested tasks." });
+        return res.json({});
       }
       return res.json(tasks);
     },
     (e) => {
       return res.json({
-        msg: "Error while trying to fetch requested tasks.",
+        msg: 'Error while trying to fetch requested tasks.',
         errorMsg: e,
       });
-    }
+    },
   );
 });
 
 // @route   GET tasks/:userId/:subjectId
 // @desc    Gets a specific subject's tasks
 // @access  Private
-router.get("/:userId/:subjectId", auth, (req, res) => {
+router.get('/:userId/:subjectId', auth, (req, res) => {
   const db = admin.database();
   const { userId, subjectId } = req.params;
   const ref = db.ref(`/tasks/${userId}/${subjectId}`);
 
-  ref.on(
-    "value",
+  ref.once(
+    'value',
     (tasks) => {
       if (!tasks.exists()) {
-        return res.json({ msg: "Could not find requested subject's tasks." });
+        return res.json({});
       }
       return res.json(tasks);
     },
@@ -51,45 +51,45 @@ router.get("/:userId/:subjectId", auth, (req, res) => {
         msg: "Error while trying to fetch requested subject's tasks.",
         errorMsg: e,
       });
-    }
+    },
   );
 });
 
 // @route   GET tasks/:userId/:subjectId/:taskId
 // @desc    Gets a specific task
 // @access  Private
-router.get("/:userId/:subjectId/:taskId", auth, (req, res) => {
+router.get('/:userId/:subjectId/:taskId', auth, (req, res) => {
   const db = admin.database();
   const { userId, subjectId, taskId } = req.params;
   const ref = db.ref(`tasks/${userId}/${subjectId}/${taskId}`);
 
   ref.once(
-    "value",
+    'value',
     (task) => {
       if (!task.exists()) {
-        return res.json({ msg: "Could not find requested task." });
+        return res.json({ msg: 'Could not find requested task.' });
       }
       return res.json(task);
     },
     (e) => {
       return res.json({
-        msg: "Error while trying to fetch requsted task.",
+        msg: 'Error while trying to fetch requsted task.',
         errorMsg: e,
       });
-    }
+    },
   );
 });
 
 // @route   POST tasks/:userId
 // @desc    Adds a task to the database
 // @access  Private
-router.post("/:userId", auth, validateSID, (req, res) => {
+router.post('/:userId', auth, validateSID, (req, res) => {
   const db = admin.database();
   const { userId } = req.params;
   const { name, description, type, subjectId, dueDate, reminder } = req.body;
 
   if (!name || !type || !subjectId || !dueDate) {
-    return res.status(400).json({ msg: "Missing parameters." });
+    return res.status(400).json({ msg: 'Missing parameters.' });
   }
 
   const task = new Task(name, type, subjectId, dueDate);
@@ -103,7 +103,7 @@ router.post("/:userId", auth, validateSID, (req, res) => {
 
   try {
     ref.set(task);
-    res.status(201).json({ success: true });
+    res.status(201).json(task);
   } catch (e) {
     res.status(500).json({ success: false, errorMsg: e });
   }
@@ -112,13 +112,13 @@ router.post("/:userId", auth, validateSID, (req, res) => {
 // @route   PUT tasks/:userId/:subjectId/:taskId
 // @desc    Updates an existing task
 // @access  Private
-router.put("/:userId/:subjectId/:taskId", auth, (req, res) => {
+router.put('/:userId/:subjectId/:taskId', auth, (req, res) => {
   const db = admin.database();
   const { userId, subjectId, taskId } = req.params;
   const { name, description, type, dueDate, reminder } = req.body;
 
   if (!name || !type || !dueDate) {
-    return res.status(400).json({ msg: "Missing parameters." });
+    return res.status(400).json({ msg: 'Missing parameters.' });
   }
 
   const task = new Task(name, type, subjectId, dueDate);
@@ -129,14 +129,14 @@ router.put("/:userId/:subjectId/:taskId", auth, (req, res) => {
 
   const ref = db.ref(`tasks/${userId}/${subjectId}/${taskId}`);
 
-  ref.once("value", (snapshot) => {
+  ref.once('value', (snapshot) => {
     if (snapshot.exists()) {
       ref
         .update(task)
-        .then(res.status(204))
+        .then(res.status(204).end())
         .catch((e) => res.status(500).json({ success: false, errorMsg: e }));
     } else {
-      return res.status(400).json({ msg: "Task does not exist." });
+      return res.status(404).json({ msg: 'Task does not exist.' });
     }
   });
 });
@@ -144,7 +144,7 @@ router.put("/:userId/:subjectId/:taskId", auth, (req, res) => {
 // @route   DELETE tasks/:userId/:subjectId/:taskId
 // @desc    Deletes a task
 // @access  Private
-router.delete("/:userId/:subjectId/:taskId", auth, (req, res) => {
+router.delete('/:userId/:subjectId/:taskId', auth, (req, res) => {
   const db = admin.database();
   const { userId, subjectId, taskId } = req.params;
 
@@ -152,9 +152,9 @@ router.delete("/:userId/:subjectId/:taskId", auth, (req, res) => {
 
   try {
     ref.set(null);
-    return res.status(204);
+    return res.status(204).end();
   } catch (e) {
-    return res.status(500).json({ msg: "Error while processing your request", errorMsg: e });
+    return res.status(500).json({ msg: 'Error while processing your request', errorMsg: e });
   }
 });
 
