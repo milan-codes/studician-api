@@ -7,9 +7,9 @@ class Lesson {
    * @param {string}  subjectId - ID of a [Subject] object
    * @param {string}  week - Represents whether the lesson is on Week A or B
    * @param {number}  day - Day of the lesson stored as an int, 1: Sun - 7: Sat
-   * @param {string}  starts - Time when the lesson starts (mandatory)
-   * @param {string}  ends - Time when the lesson ends (mandatory)
-   * @param {string}  location - Location of the lesson (mandatory)
+   * @param {string}  starts - Time when the lesson starts
+   * @param {string}  ends - Time when the lesson ends
+   * @param {string}  location - Location of the lesson
    * @param {string}  id - Unique ID, automatically set
    */
   constructor(subjectId, week, day, starts, ends, location, id = '') {
