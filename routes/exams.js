@@ -1,8 +1,9 @@
 const admin = require('firebase-admin');
 const auth = require('../middleware/auth');
 const express = require('express');
-const validateSID = require('../middleware/validateSID');
 const Exam = require('../models/Exam');
+const validateSID = require('../middleware/validateSID');
+const { isValidDate } = require('../utils');
 const router = express.Router();
 
 // @route   GET exams/:userId
@@ -92,6 +93,17 @@ router.post('/:userId', auth, validateSID, (req, res) => {
     return res.status(400).json({ msg: 'Missing parameters.' });
   }
 
+  const isInvalidName = typeof name !== 'string';
+  const isInvalidSubjectId = typeof subjectId !== 'string';
+  const isInvalidDueDate = !isValidDate(dueDate);
+  // Optional params
+  const isInvalidDesc = description ? typeof description !== 'string' : false;
+  const isInvalidReminder = reminder ? !isValidDate(reminder) : false;
+
+  if (isInvalidName || isInvalidSubjectId || isInvalidDueDate || isInvalidDesc || isInvalidReminder) {
+    return res.status(400).json({ msg: 'Invalid parameter types.' });
+  }
+
   const exam = new Exam(name, subjectId, dueDate);
   const key = db.ref(`exams/${userId}/${subjectId}`).push().key;
   exam.id = key;
@@ -119,6 +131,17 @@ router.put('/:userId/:subjectId/:examId', auth, (req, res) => {
 
   if (!name || !dueDate) {
     return res.status(400).json({ msg: 'Missing parameters.' });
+  }
+
+  const isInvalidName = typeof name !== 'string';
+  const isInvalidSubjectId = typeof subjectId !== 'string';
+  const isInvalidDueDate = !isValidDate(dueDate);
+  // Optional params
+  const isInvalidDesc = description ? typeof description !== 'string' : false;
+  const isInvalidReminder = reminder ? !isValidDate(reminder) : false;
+
+  if (isInvalidName || isInvalidSubjectId || isInvalidDueDate || isInvalidDesc || isInvalidReminder) {
+    return res.status(400).json({ msg: 'Invalid parameter types.' });
   }
 
   const exam = new Exam(name, subjectId, dueDate);

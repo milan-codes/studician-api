@@ -1,6 +1,6 @@
 const server = require('../server');
 const admin = require('firebase-admin');
-const testUtils = require('./testUtils');
+const { getTestIdToken } = require('../utils');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const chai = require('chai');
@@ -27,7 +27,7 @@ describe('Task routes tests', () => {
     testSubject = dummySubject;
 
     // Getting a token to bypass authentication
-    return testUtils.getTestIdToken('testuser').then((token) => (authToken = token));
+    return getTestIdToken('testuser').then((token) => (authToken = token));
   });
 
   describe('GET tasks/:userId', () => {
@@ -104,6 +104,30 @@ describe('Task routes tests', () => {
     });
   });
 
+  describe('POST tasks/:userId', () => {
+    it('should throw an error because parameters have wrong types', (done) => {
+      const task = {
+        name: 1,
+        description: 'POST api test',
+        type: 3,
+        subjectId: 6,
+        dueDate: Date.now(),
+        reminder: Date.now(),
+      };
+      chai
+        .request(server)
+        .post('/tasks/testuser')
+        .set('x-auth-token', authToken)
+        .send(task)
+        .end((err, res) => {
+          if (err) throw Error(err);
+          res.should.have.status(400);
+          res.body.msg.should.be.eql('Invalid parameter types.');
+          done();
+        });
+    });
+  });
+
   describe('GET tasks/:userId/:subjectId/:taskId', () => {
     it('should get a specific task from the database', (done) => {
       chai
@@ -161,6 +185,30 @@ describe('Task routes tests', () => {
         .end((err, res) => {
           if (err) throw Error(err);
           res.should.have.status(404);
+          done();
+        });
+    });
+  });
+
+  describe('PUT tasks/:userId/:subjectId/:lessonId', () => {
+    it('should throw an error, because parameters have wrong types', (done) => {
+      const task = {
+        name: 1,
+        description: 'PUT api test',
+        type: 3,
+        subjectId: 'testsubject',
+        dueDate: 'Date.now()',
+        reminder: Date.now(),
+      };
+      chai
+        .request(server)
+        .put(`/tasks/testuser/${testTask.subjectId}/${testTask.id}`)
+        .set('x-auth-token', authToken)
+        .send(task)
+        .end((err, res) => {
+          if (err) throw Error(err);
+          res.should.have.status(400);
+          res.body.msg.should.be.eql('Invalid parameter types.');
           done();
         });
     });

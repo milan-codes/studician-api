@@ -66,6 +66,14 @@ router.post('/:userId', auth, (req, res) => {
     return res.status(400).json({ msg: 'Missing parameters.' });
   }
 
+  const isInvalidName = typeof name !== 'string';
+  const isInvalidTeacher = typeof teacher !== 'string';
+  const isInvalidColorCode = typeof parseInt(colorCode, 10) !== 'number';
+
+  if (isInvalidName || isInvalidTeacher || isInvalidColorCode) {
+    return res.status(400).json({ msg: 'Invalid parameter types.' });
+  }
+
   const subject = new Subject(name, teacher, colorCode);
   const key = db.ref(`subjects/${userId}`).push().key;
   subject.id = key;
@@ -90,6 +98,14 @@ router.put('/:userId/:subjectId', auth, (req, res) => {
 
   if (!name || !teacher || !colorCode) {
     return res.status(400).json({ msg: 'Missing parameters.' });
+  }
+
+  const isInvalidName = typeof name !== 'string';
+  const isInvalidTeacher = typeof teacher !== 'string';
+  const isInvalidColorCode = typeof parseInt(colorCode, 10) !== 'number';
+
+  if (isInvalidName || isInvalidTeacher || isInvalidColorCode) {
+    return res.status(400).json({ msg: 'Invalid parameter types.' });
   }
 
   const subject = new Subject(name, teacher, colorCode, subjectId);
