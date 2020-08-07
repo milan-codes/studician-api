@@ -66,11 +66,7 @@ router.post('/:userId', auth, (req, res) => {
     return res.status(400).json({ msg: 'Missing parameters.' });
   }
 
-  const isInvalidName = typeof name !== 'string';
-  const isInvalidTeacher = typeof teacher !== 'string';
-  const isInvalidColorCode = typeof parseInt(colorCode, 10) !== 'number';
-
-  if (isInvalidName || isInvalidTeacher || isInvalidColorCode) {
+  if (hasInvalidParams(name, teacher, colorCode)) {
     return res.status(400).json({ msg: 'Invalid parameter types.' });
   }
 
@@ -100,11 +96,7 @@ router.put('/:userId/:subjectId', auth, (req, res) => {
     return res.status(400).json({ msg: 'Missing parameters.' });
   }
 
-  const isInvalidName = typeof name !== 'string';
-  const isInvalidTeacher = typeof teacher !== 'string';
-  const isInvalidColorCode = typeof parseInt(colorCode, 10) !== 'number';
-
-  if (isInvalidName || isInvalidTeacher || isInvalidColorCode) {
+  if (hasInvalidParams(name, teacher, colorCode)) {
     return res.status(400).json({ msg: 'Invalid parameter types.' });
   }
 
@@ -146,5 +138,27 @@ router.delete('/:userId/:subjectId', auth, (req, res) => {
     return res.status(500).json({ msg: 'Error while processing your request.', errorMsg: e });
   }
 });
+
+/**
+ * A simple function that checks whether a request
+ * that contains a Subject object has any invalid params.
+ *
+ * @param {string} name
+ * @param {string} teacher
+ * @param {number} colorCode
+ *
+ * @returns {boolean} True if any of the given params is invalid, otherwise false.
+ */
+const hasInvalidParams = (name, teacher, colorCode) => {
+  const isInvalidName = typeof name !== 'string';
+  const isInvalidTeacher = typeof teacher !== 'string';
+  const isInvalidColorCode = typeof parseInt(colorCode, 10) !== 'number';
+
+  if (isInvalidName || isInvalidTeacher || isInvalidColorCode) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
 module.exports = router;

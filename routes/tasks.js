@@ -93,15 +93,7 @@ router.post('/:userId', auth, validateSID, (req, res) => {
     return res.status(400).json({ msg: 'Missing parameters.' });
   }
 
-  const isInvalidName = typeof name !== 'string';
-  const isInvalidType = typeof type !== 'number' || (type !== 1 && type !== 2);
-  const isInvalidSubjectId = typeof subjectId !== 'string';
-  const isInvalidDueDate = !isValidDate(dueDate);
-  // Optional params
-  const isInvalidDesc = description ? typeof description !== 'string' : false;
-  const isInvalidReminder = !isValidDate(reminder);
-
-  if (isInvalidName || isInvalidDesc || isInvalidType || isInvalidSubjectId || isInvalidDueDate || isInvalidReminder) {
+  if (hasInvalidParams(name, type, dueDate, description, reminder)) {
     return res.status(400).json({ msg: 'Invalid parameter types.' });
   }
 
@@ -134,15 +126,7 @@ router.put('/:userId/:subjectId/:taskId', auth, (req, res) => {
     return res.status(400).json({ msg: 'Missing parameters.' });
   }
 
-  const isInvalidName = typeof name !== 'string';
-  const isInvalidType = typeof type !== 'number' || (type !== 1 && type !== 2);
-  const isInvalidSubjectId = typeof subjectId !== 'string';
-  const isInvalidDueDate = !isValidDate(dueDate);
-  // Optional params
-  const isInvalidDesc = description ? typeof description !== 'string' : false;
-  const isInvalidReminder = !isValidDate(reminder);
-
-  if (isInvalidName || isInvalidDesc || isInvalidType || isInvalidSubjectId || isInvalidDueDate || isInvalidReminder) {
+  if (hasInvalidParams(name, type, dueDate, description, reminder)) {
     return res.status(400).json({ msg: 'Invalid parameter types.' });
   }
 
@@ -182,5 +166,32 @@ router.delete('/:userId/:subjectId/:taskId', auth, (req, res) => {
     return res.status(500).json({ msg: 'Error while processing your request', errorMsg: e });
   }
 });
+
+/**
+ * A simple function that checks whether a request
+ * that contains a Task object has any invalid params.
+ *
+ * @param {string} name
+ * @param {number} type
+ * @param {string} dueDate
+ * @param {string} description
+ * @param {string} reminder
+ *
+ * @returns {boolean} True if any of the given params is invalid, otherwise false.
+ */
+const hasInvalidParams = (name, type, dueDate, description, reminder) => {
+  const isInvalidName = typeof name !== 'string';
+  const isInvalidType = typeof type !== 'number' || (type !== 1 && type !== 2);
+  const isInvalidDueDate = !isValidDate(dueDate);
+  // Optional params
+  const isInvalidDesc = description ? typeof description !== 'string' : false;
+  const isInvalidReminder = !isValidDate(reminder);
+
+  if (isInvalidName || isInvalidDesc || isInvalidType || isInvalidDueDate || isInvalidReminder) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
 module.exports = router;
