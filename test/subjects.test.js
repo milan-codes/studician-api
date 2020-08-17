@@ -1,6 +1,6 @@
 const server = require('../server');
 const admin = require('firebase-admin');
-const testUtils = require('./testUtils');
+const { getTestIdToken } = require('../utils');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const chai = require('chai');
@@ -17,7 +17,7 @@ describe('Subject routes tests', () => {
     admin.database().ref('/').set(null);
 
     // Getting token to bypass authentication
-    return testUtils.getTestIdToken('testuser').then((token) => (authToken = token));
+    return getTestIdToken('testuser').then((token) => (authToken = token));
   });
 
   describe('GET subjects/:userId', () => {
@@ -75,6 +75,27 @@ describe('Subject routes tests', () => {
     });
   });
 
+  describe('POST subjects/:userId', () => {
+    it('should throw an error because required parameters have wrong types', (done) => {
+      const subject = {
+        name: 1,
+        teacher: 'Type test',
+        colorCode: '123456789',
+      };
+      chai
+        .request(server)
+        .post('/subjects/testuser')
+        .set('x-auth-token', authToken)
+        .send(subject)
+        .end((err, res) => {
+          if (err) throw Error(err);
+          res.should.have.status(400);
+          res.body.msg.should.be.eql('Invalid parameter types.');
+          done();
+        });
+    });
+  });
+
   describe('GET subjects/:userId/:subjectId', () => {
     it('should get a specific subject from the database', (done) => {
       chai
@@ -126,6 +147,27 @@ describe('Subject routes tests', () => {
         .end((err, res) => {
           if (err) throw Error(err);
           res.should.have.status(404);
+          done();
+        });
+    });
+  });
+
+  describe('PUT subjects/:userId/:subjectId', () => {
+    it('should throw an error, because required parameters have wrong types', (done) => {
+      const subject = {
+        name: 1,
+        teacher: 'Type test',
+        colorCode: '123456789',
+      };
+      chai
+        .request(server)
+        .put('/subjects/testuser/non-existing-subject')
+        .set('x-auth-token', authToken)
+        .send(subject)
+        .end((err, res) => {
+          if (err) throw Error(err);
+          res.should.have.status(400);
+          res.body.msg.should.be.eql('Invalid parameter types.');
           done();
         });
     });

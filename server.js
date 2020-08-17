@@ -1,10 +1,12 @@
 const express = require('express');
 const admin = require('firebase-admin');
+const bp = require('body-parser');
 const app = express();
 
 require('dotenv').config();
 
 // Bodyparser middleware
+app.use(bp.json());
 app.use(express.json());
 
 // Setting up Firebase

@@ -1,6 +1,6 @@
 const server = require('../server');
 const admin = require('firebase-admin');
-const testUtils = require('./testUtils');
+const { getTestIdToken } = require('../utils');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const chai = require('chai');
@@ -27,7 +27,7 @@ describe('Lesson routes tests', () => {
     testSubject = dummySubject;
 
     // Getting token to bypass authentication
-    return testUtils.getTestIdToken('testuser').then((token) => (authToken = token));
+    return getTestIdToken('testuser').then((token) => (authToken = token));
   });
 
   describe('GET lessons/:userId', () => {
@@ -66,7 +66,7 @@ describe('Lesson routes tests', () => {
     it('should add a lesson to the database under testuser/testsubject', (done) => {
       const lesson = {
         subjectId: 'testsubject',
-        week: 'test',
+        week: 'A',
         day: 1,
         starts: '7:45',
         ends: '7:45',
@@ -104,6 +104,30 @@ describe('Lesson routes tests', () => {
     });
   });
 
+  describe('POST lessons/:userId', () => {
+    it('should throw an error because parameters have wrong types', (done) => {
+      const lesson = {
+        subjectId: 'testsubject',
+        week: 'C',
+        day: 8,
+        starts: 745,
+        ends: 745,
+        location: 1,
+      };
+      chai
+        .request(server)
+        .post('/lessons/testuser')
+        .set('x-auth-token', authToken)
+        .send(lesson)
+        .end((err, res) => {
+          if (err) throw Error(err);
+          res.should.have.status(400);
+          res.body.msg.should.be.eql('Invalid parameter types.');
+          done();
+        });
+    });
+  });
+
   describe('GET lessons/:userId/:subjectId/:lessonId', () => {
     it('should get a specific lesson from the database', (done) => {
       chai
@@ -124,7 +148,7 @@ describe('Lesson routes tests', () => {
     it('should update the previously added lesson', (done) => {
       const lesson = {
         subjectId: 'testsubject',
-        week: 'PUT test',
+        week: 'B',
         day: 1,
         starts: 'PUT 7:45',
         ends: 'PUT 7:45',
@@ -147,7 +171,7 @@ describe('Lesson routes tests', () => {
     it('should throw an error, because the requested lesson does not exist', (done) => {
       const lesson = {
         subjectId: 'testsubject',
-        week: 'PUT test',
+        week: 'A',
         day: 1,
         starts: 'PUT 7:45',
         ends: 'PUT 7:45',
@@ -161,6 +185,30 @@ describe('Lesson routes tests', () => {
         .end((err, res) => {
           if (err) throw Error(err);
           res.should.have.status(404);
+          done();
+        });
+    });
+  });
+
+  describe('PUT lessons/:userId/:subjectId/:lessonId', () => {
+    it('should throw an error, because parameters have wrong types', (done) => {
+      const lesson = {
+        subjectId: 'testsubject',
+        week: 'C',
+        day: 8,
+        starts: 745,
+        ends: 745,
+        location: 1,
+      };
+      chai
+        .request(server)
+        .put(`/lessons/testuser/${testLesson.subjectId}/${testLesson.id}`)
+        .set('x-auth-token', authToken)
+        .send(lesson)
+        .end((err, res) => {
+          if (err) throw Error(err);
+          res.should.have.status(400);
+          res.body.msg.should.be.eql('Invalid parameter types.');
           done();
         });
     });

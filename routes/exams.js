@@ -1,8 +1,9 @@
 const admin = require('firebase-admin');
 const auth = require('../middleware/auth');
 const express = require('express');
-const validateSID = require('../middleware/validateSID');
 const Exam = require('../models/Exam');
+const validateSID = require('../middleware/validateSID');
+const { isValidDate } = require('../utils');
 const router = express.Router();
 
 // @route   GET exams/:userId
@@ -92,6 +93,10 @@ router.post('/:userId', auth, validateSID, (req, res) => {
     return res.status(400).json({ msg: 'Missing parameters.' });
   }
 
+  if (hasInvalidParams(name, subjectId, dueDate, description, reminder)) {
+    return res.status(400).json({ msg: 'Invalid parameter types.' });
+  }
+
   const exam = new Exam(name, subjectId, dueDate);
   const key = db.ref(`exams/${userId}/${subjectId}`).push().key;
   exam.id = key;
@@ -119,6 +124,10 @@ router.put('/:userId/:subjectId/:examId', auth, (req, res) => {
 
   if (!name || !dueDate) {
     return res.status(400).json({ msg: 'Missing parameters.' });
+  }
+
+  if (hasInvalidParams(name, subjectId, dueDate, description, reminder)) {
+    return res.status(400).json({ msg: 'Invalid parameter types.' });
   }
 
   const exam = new Exam(name, subjectId, dueDate);
@@ -157,5 +166,32 @@ router.delete('/:userId/:subjectId/:examId', auth, (req, res) => {
     return res.status(500).json({ msg: 'Error while processing your request', errorMsg: e });
   }
 });
+
+/**
+ * A simple function that checks whether a request
+ * that contains an Exam object has any invalid params.
+ *
+ * @param {string} name
+ * @param {string} subjectId
+ * @param {string} dueDate
+ * @param {string} description
+ * @param {string} reminder
+ *
+ * @returns {boolean} True if any of the given params is invalid, otherwise false.
+ */
+const hasInvalidParams = (name, subjectId, dueDate, description, reminder) => {
+  const isInvalidName = typeof name !== 'string';
+  const isInvalidSubjectId = typeof subjectId !== 'string';
+  const isInvalidDueDate = !isValidDate(dueDate);
+  // Optional params
+  const isInvalidDesc = description ? typeof description !== 'string' : false;
+  const isInvalidReminder = reminder ? !isValidDate(reminder) : false;
+
+  if (isInvalidName || isInvalidSubjectId || isInvalidDueDate || isInvalidDesc || isInvalidReminder) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
 module.exports = router;

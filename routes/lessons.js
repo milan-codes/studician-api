@@ -92,6 +92,10 @@ router.post('/:userId', auth, validateSID, (req, res) => {
     return res.status(400).json({ msg: 'Missing parameters.' });
   }
 
+  if (hasInvalidParams(week, day, starts, ends, location)) {
+    return res.status(400).json({ msg: 'Invalid parameter types.' });
+  }
+
   const lesson = new Lesson(subjectId, week, day, starts, ends, location);
   const key = db.ref(`lessons/${userId}/${subjectId}`).push().key;
   lesson.id = key;
@@ -116,6 +120,10 @@ router.put('/:userId/:subjectId/:lessonId', auth, (req, res) => {
 
   if (!week || !day || !starts || !ends || !location) {
     return res.status(400).json({ msg: 'Missing parameters.' });
+  }
+
+  if (hasInvalidParams(week, day, starts, ends, location)) {
+    return res.status(400).json({ msg: 'Invalid parameter types.' });
   }
 
   const lesson = new Lesson(subjectId, week, day, starts, ends, location, lessonId);
@@ -149,5 +157,31 @@ router.delete('/:userId/:subjectId/:lessonId', auth, (req, res) => {
     return res.status(500).json({ msg: 'Error while processing your request.', errorMsg: e });
   }
 });
+
+/**
+ * A simple function that checks whether a request
+ * that contains a Lesson object has any invalid params.
+ *
+ * @param {string} week
+ * @param {number} day
+ * @param {string} starts
+ * @param {string} ends
+ * @param {string} location
+ *
+ * @returns {boolean} True if any of the given params is invalid, otherwise false.
+ */
+const hasInvalidParams = (week, day, starts, ends, location) => {
+  const isInvalidWeek = typeof week !== 'string' || (week !== 'A' && week !== 'B');
+  const isInvalidDay = typeof parseInt(day, 10) !== 'number' || parseInt(day, 10) < 1 || parseInt(day, 10) > 7;
+  const isInvalidStarts = typeof starts !== 'string';
+  const isInvalidEnds = typeof ends !== 'string';
+  const isInvalidLocation = typeof location !== 'string';
+
+  if (isInvalidWeek || isInvalidDay || isInvalidStarts || isInvalidEnds || isInvalidLocation) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
 module.exports = router;

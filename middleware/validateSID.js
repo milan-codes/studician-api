@@ -11,6 +11,12 @@ function validateSID(req, res, next) {
     return res.status(400).json({ msg: 'Required tokens were not provided.' });
   }
 
+  const isInvalidSubjectId = typeof subjectId !== 'string';
+
+  if (isInvalidSubjectId) {
+    return res.status(400).json({ msg: 'Invalid parameter types.' });
+  }
+
   const db = admin.database();
   const ref = db.ref(`subjects/${userId}/${subjectId}`);
 

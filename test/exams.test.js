@@ -1,6 +1,6 @@
 const server = require('../server');
 const admin = require('firebase-admin');
-const testUtils = require('./testUtils');
+const { getTestIdToken } = require('../utils');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const chai = require('chai');
@@ -27,7 +27,7 @@ describe('Exam routes tests', () => {
     testSubject = dummySubject;
 
     // Getting token to bypass authentication
-    return testUtils.getTestIdToken('testuser').then((token) => (authToken = token));
+    return getTestIdToken('testuser').then((token) => (authToken = token));
   });
 
   describe('GET exams/:userId', () => {
@@ -103,6 +103,29 @@ describe('Exam routes tests', () => {
     });
   });
 
+  describe('POST exams/:userId', () => {
+    it('should throw an error because parameters have wrong types', (done) => {
+      const exam = {
+        name: 'POST api test',
+        description: 'POST api test',
+        subjectId: 'testsubject',
+        dueDate: Date.now(),
+        reminder: 'Date.now()',
+      };
+      chai
+        .request(server)
+        .post('/exams/testuser')
+        .set('x-auth-token', authToken)
+        .send(exam)
+        .end((err, res) => {
+          if (err) throw Error(err);
+          res.should.have.status(400);
+          res.body.msg.should.be.eql('Invalid parameter types.');
+          done();
+        });
+    });
+  });
+
   describe('GET exams/:userId/:subjectId/:examId', () => {
     it('should get a specific exam from the database', (done) => {
       chai
@@ -158,6 +181,29 @@ describe('Exam routes tests', () => {
         .end((err, res) => {
           if (err) throw Error(err);
           res.should.have.status(404);
+          done();
+        });
+    });
+  });
+
+  describe('PUT exams/:userId/:subjectId/:lessonId', () => {
+    it('should throw an error, because parameters have the wrong types', (done) => {
+      const exam = {
+        name: 'PUT api test',
+        description: 1,
+        subjectId: 'testsubject',
+        dueDate: Date.now(),
+        reminder: Date.now(),
+      };
+      chai
+        .request(server)
+        .put(`/exams/testuser/${testExam.subjectId}/${testExam.id}`)
+        .set('x-auth-token', authToken)
+        .send(exam)
+        .end((err, res) => {
+          if (err) throw Error(err);
+          res.should.have.status(400);
+          res.body.msg.should.be.eql('Invalid parameter types.');
           done();
         });
     });
